@@ -80,8 +80,8 @@ const game = function Gameboard ()
     const board = [];
     
     // Points counter for both players
-    const playerOneWins = 0;
-    const playerTwoWins = 0;
+    let playerOneWins = 0;
+    let playerTwoWins = 0;
 
 
     // For error testing
@@ -131,6 +131,10 @@ const game = function Gameboard ()
                             // Update the board at board[row][col] with player's mark
                             board[row][col] = currentPlayer; // Assuming player is 'X' or 'O'
                             console.log(board);  // Display updated board
+                            gameWin();
+                            currentPlayer = switchPlayer(currentPlayer);
+                            console.log(`It is the other player's turn! Place ${currentPlayer} now`);
+                            setTimeout(rowColumn, 3000);
                             } 
                         else 
                             {
@@ -146,6 +150,20 @@ const game = function Gameboard ()
                 
                     }     
                     rowColumn();
+            }
+
+            const switchPlayer = (currentPlayer) =>
+            {
+                if (currentPlayer ==='X')
+                {
+                    currentPlayer = 'O';
+                }
+                else if (currentPlayer === 'O')
+                 {
+                    currentPlayer = 'X';
+                 }   
+                 return currentPlayer;
+
             }
 
     const gameWin = () =>
@@ -182,6 +200,18 @@ const game = function Gameboard ()
                 console.log(`Player 1 wins! Player 1 currently has ${playerOneWins}`);
             }
 
+            //special case win where player 1 wins by getting all 3 X's with a cross over
+            else if (board[0][2] === 'X' && board[1][1] === 'X' && board[2][0] === 'X')
+                {
+                    playerOneWins++;
+                    console.log(`Player 1 wins! Player 1 currently has ${playerOneWins}`);
+                }
+            else if (board[0][0] === 'X' && board[1][1] === 'X' && board[2][2] === 'X')
+                {
+                    playerOneWins++;
+                    console.log(`Player 1 wins! Player 1 currently has ${playerOneWins}`);
+                }
+
              // Tracks all possible outcomes for player 2 to win
             if(board[0][0] === 'O' && board[0][1] === 'O' && board[0][2] === 'O')
             {
@@ -213,6 +243,21 @@ const game = function Gameboard ()
                 playerTwoWins++;
                 console.log(`Player 2 wins! Player 2 currently has ${playerTwoWins}`);
             }
+
+        //special case win where player 2 wins by getting all 3 O's with a cross over
+        else if (board[0][2] === 'O' && board[1][1] === 'O' && board[2][0] === 'O')
+             {
+                playerTwoWins++;
+                console.log(`Player 2 wins! Player 2 currently has ${playerTwoWins}`);
+             }
+        else if (board[0][0] === 'O' && board[1][1] === 'O' && board[2][2] === 'O')
+            {
+                playerTwoWins++;
+                console.log(`Player 2 wins! Player 2 currently has ${playerTwoWins}`);
+            }
+            
+            
+
             // both players couldn't win, therefore none of them gets a point.
             else
             {
