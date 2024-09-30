@@ -36,54 +36,6 @@ while gameEnd is true,
 */
 
 
-
-
-const game = function Gameboard ()
-{
-    const rows = 3;
-    const columns = 3;
-    const board = [];
-
-    // For error testing
-    const seeboard = () => 
-        {
-            return board;
-        }
-
-    // Reseting board for user
-    const resetBoard = () => 
-    {
-        for (let i = 0; i < rows; i++) 
-        {
-            board[i] = ['', '', '']; // Initialize with empty strings
-        }
-    }
-
-    // Setter function to get private board array
-    const setBoard = () =>
-    {
-    for(let i = 0; i < rows; i++)
-        {
-        board[i] = [];
-        for(let j = 0; j < columns; j++)
-            {
-                board[i][j] = [];
-            }
-        
-        }
-    return board;
-    } 
-
-   
-
-    // Return object to the calling function
-    return {resetBoard, setBoard, seeboard};
-    
-}();
-
-
-
-
 const players = function displayController ()
 {
     const player1 = 'X';
@@ -115,60 +67,89 @@ const players = function displayController ()
         }
     }
 
-    return {player1, player2, selectPlayer};
+    return {selectPlayer};
 }();
 
 
+// Another factory function but this is for the game itself
 
-
-function playGame (player)
+const game = function Gameboard ()
 {
+    const rows = 3;
+    const columns = 3;
+    const board = [];
+    
     // Points counter for both players
     const playerOneWins = 0;
     const playerTwoWins = 0;
 
-    let gameEnd = false;
-    
-    while (!gameEnd)
+
+    // For error testing
+    const seeboard = () => 
+        {
+            return board;
+        }
+
+    // Reseting board for user
+    const resetBoard = () => 
     {
+        for (let i = 0; i < rows; i++) 
+        {
+         board[i] = ['', '', '']; // Initialize with empty strings
+        }
+        return board;
+    }
 
-        const rowColumn = () =>
-    { 
-        const row = prompt("Enter row:");
-        const col = prompt("Enter column:");
+    // Setter function to get private board array
+    const setBoard = () =>
+    {
+    for(let i = 0; i < rows; i++)
+        {
+        board[i] = [];
+        for(let j = 0; j < columns; j++)
+            {
+                board[i][j] = [];
+            }
         
-        if (row === "0" || row === "1" || row === "2") 
-        {
-            if (col === "0" || col === "1" || col === "2") 
+        }
+    return board;
+    } 
+
+
+            const playGame = (currentPlayer) =>
             {
-                // Update the board at board[row][col] with player's mark
-                board[row][col] = player; // Assuming player is 'X' or 'O'
-                console.log(board);  // Display updated board
-            } 
-            else 
-            {
-                alert("Invalid column! Please enter 0, 1, or 2.");
-                rowColumn();
+             
+                    const rowColumn = () =>
+                    { 
+                        const row = prompt("Enter row:");
+                        const col = prompt("Enter column:");
+                    
+                        if (row === "0" || row === "1" || row === "2") 
+                        {
+                        if (col === "0" || col === "1" || col === "2") 
+                            {
+                            // Update the board at board[row][col] with player's mark
+                            board[row][col] = currentPlayer; // Assuming player is 'X' or 'O'
+                            console.log(board);  // Display updated board
+                            } 
+                        else 
+                            {
+                            alert("Invalid column! Please enter 0, 1, or 2.");
+                            rowColumn();
+                            }
+                        }   
+                        else 
+                            {
+                            alert("Invalid row! Please enter 0, 1, or 2.");
+                            rowColumn();
+                            }
+                
+                    }     
+                    rowColumn();
             }
-        } else 
-            {
-            alert("Invalid row! Please enter 0, 1, or 2.");
-            rowColumn();
-            }
-    
 
-
-
-
-
-
-
-
-    }     
-    
-        const gameWin = () =>
+    const gameWin = () =>
         {
-            
             // Tracks all possible outcomes for player 1 to win
             if(board[0][0] === 'X' && board[0][1] === 'X' && board[0][2] === 'X')
             {
@@ -237,34 +218,33 @@ function playGame (player)
             {
                 gameTie();
             }
+            return playerOneWins, playerTwoWins;
         }
 
         const gameTie = () =>
             {
-                console.log(`It's a tie! current score for player 1: ${playerOneWins}`)
-                console.log(`It's a tie! current score for player 2:  ${playerTwoWins}`)
+                return console.log(`It's a tie! current score for player 1: ${playerOneWins} and player 2: ${playerTwoWins}`) 
             }
 
+            
 
-        
+   
 
-        return {rowColumn, gameWin, gameTie}
-    }
-
-}
-
-
+    // Return object to the calling function
+    return {resetBoard, setBoard, playGame, gameWin, gameTie, seeboard};    
+}();
 
 
 
-
-// Start console program
-
-const board = (game.setBoard());
+// Set up the game
+const board = console.log(game.setBoard());  // Initialize the game board
 console.log("Let's get started with the game!");
-const player = players.selectPlayer();
-const startGame = playGame(player);
-startGame.rowColumn();
+const player = players.selectPlayer(); // Get the selected player
+
+
+// Start the game loop
+game.playGame(player); // Pass the selected player to start the game
+
 
 
 
