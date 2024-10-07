@@ -117,7 +117,7 @@ const game = function Gameboard ()
         board[i] = [];
         for(let j = 0; j < columns; j++)
             {
-                board[i][j] = [];
+                board[i][j] = '';
             }
         
         }
@@ -127,7 +127,14 @@ const game = function Gameboard ()
 
             const playGame = (currentPlayer) =>
             {
-             
+                const spotTaken = (row, col) =>
+                    {
+                        if (board[row][col] === 'X' || board [row][col] === 'O')
+                            {
+                                alert("That spot is taken. Please try again")
+                                rowColumn();
+                            }
+                    }
                     const rowColumn = () =>
                     { 
                         const row = prompt("Enter row:");
@@ -138,13 +145,13 @@ const game = function Gameboard ()
                         {
                         if (col === "0" || col === "1" || col === "2") 
                             {
-                            // Update the board at board[row][col] with player's mark
+                            spotTaken(row, col);
                             board[row][col] = currentPlayer; // Assuming player is 'X' or 'O'
                             console.log(board);  // Display updated board
-                            checkWin(currentPlayer)
+                            checkWin(currentPlayer);
                             currentPlayer = switchPlayer(currentPlayer);
                             console.log(`It is the other player's turn! Place ${currentPlayer} now`);
-                            setTimeout(rowColumn, 3000);
+                            setTimeout(rowColumn, 300);
                             } 
                         else 
                             {
@@ -161,6 +168,8 @@ const game = function Gameboard ()
                     }     
                     rowColumn();
             }
+
+          
 
             const switchPlayer = (currentPlayer) =>
             {
@@ -193,23 +202,40 @@ const game = function Gameboard ()
                         if (player === 'X') 
                         {
                             console.log(`PlayerOne WINS! PlayerOne's score: ${++playerOneWins}`);
-                            return resetBoard();
+                            resetBoard();
+                            return;
                           
                         } 
-                        else 
+                        else if (player === 'O')
                         {
                             console.log(`PlayerTwo WINS! PlayerTwo's score: ${++playerTwoWins}`);
-                            return resetBoard();
+                            resetBoard();
+                            return;
                         }
+                     
+                    }
+                    else
+                    {
+                     checkTie();
                     }
                 }
                 
             };
-            
+           
             const checkTie = () =>
             {
-
+                for(let i = 0; i < rows; i++)
+                {
+                    for(let j = 0; j < columns; j++)
+                    {
+                    if (board[i][j] === '')
+                    return;
+                    }
+                }
+                console.log("It's a tie!");
+                resetBoard();
             }
+            
 
     // Return object to the calling function
     return {resetBoard, setBoard, playGame, checkWin, checkTie, seeboard};    
